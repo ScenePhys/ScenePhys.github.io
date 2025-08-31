@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhET‑Physics VideoQA</title>
+    <!--
+      This site presents the PhET‑Physics‑VideoQA benchmark.
+      The benchmark offers a controlled suite of physics simulation videos paired
+      with conceptual, numerical and error‑detection questions for probing
+      multimodal reasoning.  The accompanying CSS file defines a light,
+      academic aesthetic with colourful accents inspired by the physics domains.
+    -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Hero header with title, tagline and action buttons -->
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <img src="assets/logo.png" alt="PhET‑Physics VideoQA logo" class="logo">
+            <h1>⚛️&nbsp;PhET‑Physics VideoQA</h1>
+            <p class="tagline">Controllable physics videos for world‑model evaluation</p>
+            <div class="button-row">
+                <a href="#" class="btn disabled" title="The arXiv preprint will be released soon">ArXiv <span class="coming">coming&nbsp;soon</span></a>
+                <a href="https://huggingface.co/datasets/ScenePhys/ScenePhys/tree/main" class="btn" target="_blank">HuggingFace</a>
+                <a href="https://github.com/ScenePhys/codebase" class="btn" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation to quickly jump between sections -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="#abstract">Abstract</a></li>
+            <li><a href="#dataset">Dataset</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#videos">Video&nbsp;Samples</a></li>
+            <li><a href="#references">References</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- Abstract section -->
+        <section id="abstract" class="section">
+            <h2>Abstract</h2>
+            <p>We present <strong>PhET‑Physics‑VideoQA</strong>, a controlled benchmark for assessing physics understanding
+            in vision–language models from video.  The corpus comprises <strong>382</strong> short clips sourced from
+            <a href="https://phet.colorado.edu" target="_blank">PhET Interactive Simulations</a>, covering seventeen topics
+            across four fields: <em>Mechanics &amp; Fluids</em>, <em>Optics</em>, <em>Electromagnetism &amp; Circuits</em> and <em>Quantum
+            Mechanics</em>.  Each clip is paired with a triad of expert‑validated questions—conceptual,
+            numerical and error‑detection—yielding <strong>1,146</strong> question–answer items【372145029678933†L6-L22】.
+            The design emphasises pixel‑grounded reasoning: many clips display gauges and sliders so that
+            models must recover numeric values from frames rather than rely on language priors【372145029678933†L24-L32】.  Evaluation
+            is reproducible and type‑specific.  Numerical items are graded deterministically against gold values with
+            absolute/relative tolerances and unit checks【372145029678933†L32-L36】.  Conceptual and error‑detection items are judged with
+            a rubricised LLM that returns strict JSON, supports dual‑judge scoring and is run at zero
+            temperature with cached transcripts【372145029678933†L38-L45】.  We report results for three video‑capable VLMs—GPT‑4o‑mini,
+            Gemini‑2.5‑Flash‑Lite and Qwen‑VL‑Plus—and show that error‑detection questions are consistently
+            the most challenging【372145029678933†L46-L55】.</p>
+        </section>
+
+        <!-- Dataset description -->
+        <section id="dataset" class="section">
+            <h2>Dataset</h2>
+            <p>The benchmark leverages the high‑quality <em>PhET Interactive Simulations</em> ecosystem to build a
+            reproducible suite of controlled physics videos.  Short clips spanning kinematics, dynamics,
+            collisions, geometric optics, electricity and magnetism, circuits, buoyancy and quantum
+            phenomena are curated into a balanced corpus.  Each clip is accompanied by three complementary
+            question types:
+            <ul>
+                <li><strong>Conceptual</strong> questions probe qualitative understanding of physical laws, invariants and trends.</li>
+                <li><strong>Numerical</strong> questions require recovering numeric values from visible gauges/sliders and applying
+                physics equations with correct units.</li>
+                <li><strong>Error‑Detection</strong> ("trap") questions ask for hidden losses, idealisations or setup inconsistencies,
+                surfacing whether a model can identify when a simulation diverges from real‑world physics.</li>
+            </ul>
+            </p>
+            <figure class="figure">
+                <img src="assets/optic.png" alt="Sunburst chart of physics topics" class="responsive">
+                <figcaption>Topics in PhET‑Physics‑VideoQA.  The dataset covers mechanics &amp; fluids (blue), optics (orange),
+                electromagnetism &amp; circuits (green) and quantum mechanics (purple), each subdivided into
+                classic lab scenarios.</figcaption>
+            </figure>
+            <p>To help the community appreciate the scale and diversity of the benchmark, we provide a few summary
+            statistics.  The bar chart below shows the number of videos per physics rule, revealing balanced
+            coverage across domains.  The frame‑rate distribution indicates that most clips run at<br>approximately 30
+            frames per second, while the total duration per rule spans tens to hundreds of seconds.</p>
+            <div class="stats-grid">
+                <img src="assets/counts_per_rule.png" alt="Counts per rule" class="stat-img">
+                <img src="assets/fps_dist.png" alt="Frames per second distribution" class="stat-img">
+                <img src="assets/total_duration.png" alt="Total duration per rule" class="stat-img">
+            </div>
+        </section>
+
+        <!-- Results section -->
+        <section id="results" class="section">
+            <h2>Results</h2>
+            <p>We evaluate three video‑capable vision–language models on our benchmark: <strong>GPT‑4o‑mini</strong> (OpenAI),
+            <strong>Gemini‑2.5‑Flash‑Lite</strong> (Google) and <strong>Qwen‑VL‑Plus</strong> (Alibaba).  Numerical items are scored
+            deterministically against ground truth, while conceptual and error‑detection items are graded by an
+            LLM‑as‑a‑judge rubric.  The table below reports the mean score (1–5 scale) for each domain and
+            question type, along with the average across models.</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Category</th>
+                            <th rowspan="2">Question&nbsp;Type</th>
+                            <th colspan="3">Model Score</th>
+                            <th rowspan="2">Type&nbsp;Avg.</th>
+                        </tr>
+                        <tr>
+                            <th>GPT‑4o‑mini</th>
+                            <th>Gemini‑2.5<br>Flash‑Lite</th>
+                            <th>Qwen‑VL‑Plus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Mechanics & Fluids -->
+                        <tr>
+                            <td rowspan="3">Mechanics&nbsp;&amp;&nbsp;Fluids</td>
+                            <td>Conceptual</td>
+                            <td>4.6</td>
+                            <td>4.5</td>
+                            <td>2.3</td>
+                            <td>3.80</td>
+                        </tr>
+                        <tr class="emphasis">
+                            <td>Error&nbsp;Detection</td>
+                            <td>3.0</td>
+                            <td>3.2</td>
+                            <td>2.5</td>
+                            <td>2.90</td>
+                        </tr>
+                        <tr>
+                            <td>Numerical</td>
+                            <td>4.0</td>
+                            <td>4.2</td>
+                            <td>2.1</td>
+                            <td>3.43</td>
+                        </tr>
+                        <!-- Quantum Mechanics -->
+                        <tr>
+                            <td rowspan="3">Quantum&nbsp;Mechanics</td>
+                            <td>Conceptual</td>
+                            <td>3.7</td>
+                            <td>3.8</td>
+                            <td>1.6</td>
+                            <td>3.03</td>
+                        </tr>
+                        <tr class="emphasis">
+                            <td>Error&nbsp;Detection</td>
+                            <td>2.4</td>
+                            <td>2.5</td>
+                            <td>1.5</td>
+                            <td>2.13</td>
+                        </tr>
+                        <tr>
+                            <td>Numerical</td>
+                            <td>3.3</td>
+                            <td>3.5</td>
+                            <td>1.6</td>
+                            <td>2.80</td>
+                        </tr>
+                        <!-- Electromagnetism & Circuits -->
+                        <tr>
+                            <td rowspan="3">E&M&nbsp;&amp;&nbsp;Circuits</td>
+                            <td>Conceptual</td>
+                            <td>4.7</td>
+                            <td>4.6</td>
+                            <td>3.3</td>
+                            <td>4.20</td>
+                        </tr>
+                        <tr class="emphasis">
+                            <td>Error&nbsp;Detection</td>
+                            <td>3.8</td>
+                            <td>3.4</td>
+                            <td>3.1</td>
+                            <td>3.43</td>
+                        </tr>
+                        <tr>
+                            <td>Numerical</td>
+                            <td>4.2</td>
+                            <td>4.0</td>
+                            <td>3.2</td>
+                            <td>3.80</td>
+                        </tr>
+                        <!-- Optics -->
+                        <tr>
+                            <td rowspan="3">Optics</td>
+                            <td>Conceptual</td>
+                            <td>4.2</td>
+                            <td>4.2</td>
+                            <td>3.7</td>
+                            <td>4.03</td>
+                        </tr>
+                        <tr class="emphasis">
+                            <td>Error&nbsp;Detection</td>
+                            <td>2.6</td>
+                            <td>3.3</td>
+                            <td>2.3</td>
+                            <td>2.73</td>
+                        </tr>
+                        <tr>
+                            <td>Numerical</td>
+                            <td>4.6</td>
+                            <td>4.3</td>
+                            <td>3.9</td>
+                            <td>4.27</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="result‑analysis">Error‑detection questions are consistently the bottleneck: averaged over all models and domains they score
+            <strong>2.80</strong>, trailing conceptual items (mean <strong>3.77</strong>) by almost one point and numerical items
+            (mean <strong>3.58</strong>) by roughly 0.8 points.  This pattern holds per‑model: GPT‑4o‑mini scores 4.30 vs.
+            2.95 on conceptual vs. error detection, Gemini‑2.5‑Flash‑Lite scores 4.28 vs. 3.10 and Qwen‑VL‑Plus
+            2.73 vs. 2.35【372145029678933†L921-L943】.  Higher‑concept physics, especially quantum mechanics, depresses performance across
+            the board, while electromagnetism and circuits yield the highest scores【372145029678933†L921-L943】.</p>
+            <div class="results-charts">
+                <img src="assets/heat_map.png" alt="Confusion matrix of baseline features" class="results-img">
+                <img src="assets/score_by_rule.png" alt="Physics consistency score by rule" class="results-img">
+            </div>
+        </section>
+
+        <!-- Video samples section -->
+        <section id="videos" class="section">
+            <h2>Video Samples</h2>
+            <p>Below are placeholders for sample simulation clips illustrating the variety of scenarios in the
+            benchmark.  Each clip is accompanied by a conceptual, numerical and error‑detection question.  To
+            include your own videos in the hosted site, replace the <code>src</code> attributes with the paths to
+            your <code>.mp4</code> files in the repository and optionally update the poster images.</p>
+            <div class="video-grid">
+                <div class="video-item">
+                    <video controls preload="none" poster="assets/hero-bg.png">
+                        <source src="videos/video1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p class="video-caption">Sample 1: Mechanics &amp; Fluids</p>
+                </div>
+                <div class="video-item">
+                    <video controls preload="none" poster="assets/hero-bg.png">
+                        <source src="videos/video2.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p class="video-caption">Sample 2: Optics</p>
+                </div>
+                <div class="video-item">
+                    <video controls preload="none" poster="assets/hero-bg.png">
+                        <source src="videos/video3.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p class="video-caption">Sample 3: Electromagnetism &amp; Circuits</p>
+                </div>
+                <div class="video-item">
+                    <video controls preload="none" poster="assets/hero-bg.png">
+                        <source src="videos/video4.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p class="video-caption">Sample 4: Quantum Mechanics</p>
+                </div>
+            </div>
+            <figure class="figure">
+                <img src="assets/experiments-with-QA-final.png" alt="Example questions and topics" class="responsive">
+                <figcaption>Example of our question triads.  Each simulation clip is paired with a conceptual
+                question (qualitative reasoning), a numerical question (computation from measured values) and an
+                error‑detection question (identifying hidden losses or unit mistakes).</figcaption>
+            </figure>
+        </section>
+
+        <!-- References section -->
+        <section id="references" class="section">
+            <h2>References &amp; Citation</h2>
+            <p>To cite the PhET‑Physics‑VideoQA benchmark in your work, please use the following BibTeX entry.
+            A copy of the full bibliography used in the paper is available for download.</p>
+            <pre class="bibtex">
+@misc{scenephys2025benchmark,
+  title        = {PhET–Physics–VideoQA: Controllable Physics Videos for World–Model Evaluation},
+  howpublished = {Dataset and benchmark available on GitHub and HuggingFace},
+  year         = {2025},
+  note         = {NeurIPS 2025 submission}
+}
+            </pre>
+            <p>You can download our full references file <a href="assets/references.bib" download>here</a>.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025&nbsp;PhET‑Physics‑VideoQA &nbsp;|&nbsp; This site is maintained for academic purposes.</p>
+    </footer>
+</body>
+</html>
